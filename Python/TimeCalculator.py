@@ -35,8 +35,6 @@ def timeSubtractor( time1 , time2 ):
     secondMinutes = secondTime[1]
     
     
-    #$printer ( firstTime , firstHours ,firstMinutes,secondTime,secondHours ,secondMinutes)
-    
     #Get The Max and Min
     minHours = maxHours = minMinutes = maxMinutes = 0 
     
@@ -73,20 +71,32 @@ def timeSubtractor( time1 , time2 ):
     #calculate 
     finalHours = maxHours - minHours 
     finalMinutes = maxMinutes - minMinutes
-    printer(maxHours,maxMinutes,minHours,minMinutes)
     if ( finalMinutes < 0 ):
         finalMinutes += 60 ;
         finalHours -= 1 ;
     return ("%02d : %02d" %(finalHours,finalMinutes) )
         
- #=============================================================================   
+#=============================================================================   
+def timeDivider( time1 , time2 ):
+    firstTime = timeExtractor(time1)
+    firstHours = firstTime[0]
+    firstMinutes = firstTime[1]
     
+    secondTime = timeExtractor(time2)
+    secondHours = secondTime[0]
+    secondMinutes = secondTime[1]
     
+    firstTotalMinutes = firstHours*60 + firstMinutes 
+    secondTotalMinutes = secondHours*60 + secondMinutes
+    return ("%.2f" %((firstTotalMinutes)/(secondTotalMinutes)))
+    
+#=============================================================================  
 #Main
 def main():
     print("Hello User")
     #print(timeAdder("1:45" ,"0:0"))
     #print(timeSubtractor("1:45" ,"12:0"))
+    print(timeDivider("1:44" ,"12:0"))
    
 
 main()
