@@ -21,7 +21,6 @@ def timeAdder( time1 , time2 ):
     totlaMinutes = firstMinutes + secondMinutes
     totalHours += int(totlaMinutes/60) ;
     totlaMinutes = int(totlaMinutes % 60) ;
-    #return ("%02d : %02d" %(totalHours,totlaMinutes) )
     return (totalHours,totlaMinutes)
 
 #==============================================================================
@@ -75,7 +74,6 @@ def timeSubtractor( time1 , time2 ):
     if ( finalMinutes < 0 ):
         finalMinutes += 60 ;
         finalHours -= 1 ;
-    #return ("%02d : %02d" %(finalHours,finalMinutes) )
     return (int(finalHours),int(finalMinutes))
 
 #=============================================================================
@@ -107,7 +105,6 @@ class Entery :
         self.operator = operator
 #=============================================================================
         
-
 def calculate(listOfTimes):
     hourResult = 0 
     minuteResult = 0 
@@ -125,15 +122,7 @@ def calculate(listOfTimes):
 #=============================================================================            
 #Main
 def main():
-    """
-    print("Hello User")
-    firstInput ="1:37"
-    secondInput = "1:37"
-    print(timeAdder(firstInput ,secondInput))
-    print(timeSubtractor(firstInput ,secondInput))
-    print(timeSubtractor("1:37" ,"1:37"))
-    #print(timeDivider(firstInput ,secondInput))
-    """
+
     timesList = []
     print("[Time]<Space>[Operator] or E to end")
     
