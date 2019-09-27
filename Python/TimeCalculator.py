@@ -162,9 +162,13 @@ def sortFileContent(content ,timesList ):
     contentArray = [x for x in contentArray if x != '\n']
     contentArray = [x for x in contentArray if x != ' ' and x != '']
     ### Show File Contents : print("".join(contentArray))
+    if (contentArray[0] == "<BATCH>"):
+        print("BATCH Detected")
+        return ("BATCH_MODE",contentArray)
     for timeStr in contentArray :
         time,operator = timeStr.split(' ')
         addTime(time,operator,timesList)
+    return ("NOT_BATCH",None)
      
     
 #=============================================================================        
@@ -172,47 +176,91 @@ def addTime(time,operator,timesList):
     tempTime = Entery(time,operator)
     timesList.append(tempTime)
 #=============================================================================
+def noFileMode(timesList):
+    time,operator = input().split(' ')
+    
+    if ( time =='e' or operator == 'e' or time =='E' or operator == 'E'):
+        return "END"
+    if (operator != '+' and operator != '-' and operator != '/'):
+        print ("Wrong Operator...Try Again")
+        return "REPEAT"  
+    addTime(time,operator,timesList)
+    return "DONE"    
+#============================================================================= 
+def fileMode(timesList):
+    
+    print("What's the filePath?")
+    filePath = input()
+    content = readFromFile(filePath)
+    if (content == "Restart"):
+        return "Restart"
+        #continue
+    IsItBatch,contentArray = sortFileContent(content ,timesList)
+    return IsItBatch,contentArray
+#=============================================================================                 
+def batchMode(contentArray):
+    timesList = []
+    i = 2 
+    while ( i < len(contentArray) ):
+        print("****    Title : < %s >    *****" %(contentArray[i]))
+        i += 1
+        while(contentArray[i] != "***" ):
+            time,operator = contentArray[i].split(' ')
+            addTime(time,operator,timesList)
+            i += 1
+        calculate(timesList)
+        i += 1
+        timesList.clear();
+
+            
+    
+    
+    
 #Main
 def main():
     
     timesList = [] 
-    while (True) :#start WhileTrue_1
+    while (True) :
+    #start WhileTrue_1
+
         
-        if ( hasFile() == True ):#start If hasFile
-            print("What's the filePath?")
-            filePath = input()
-            content = readFromFile(filePath)
-            if (content == "Restart"):
+        hasFileBool = hasFile() 
+        #===============================================
+        #If There is a File
+        if ( hasFileBool == True ):
+        #start IfHasFile
+            IsItBatch,contentArray = fileMode(timesList)
+            if(IsItBatch == "Restart"):
                 continue
-            sortFileContent(content ,timesList)
-            print()
-        #end if hasFile
-
-            
-        else :#start else hasNoFile
-            
-            print("[Time]<Space>[Operator] or E to end")
-            
+            if ( IsItBatch != "BATCH_MODE" and IsItBatch != "Restart"):
+                calculate(timesList)
+        #end IfHasFile
+        #================================================
+        #If There is a BatchFile
+        if ( IsItBatch == "BATCH_MODE"):
+            batchMode(contentArray)
+        
+        #================================================
+        #If There's no File & BatchFile    
+        if ( hasFileBool == False ):
+        #start hasFile() == False            
+            print("[Time]<Space>[Operator] or E to end")           
             while (True):#start WhileTrue_2
-                time,operator = input().split(' ')
-                
-                if ( time =='e' or operator == 'e' or time =='E' or operator == 'E'):
-                    print()
+                choice = noFileMode(timesList)
+                if (choice == "END" ):
                     break
-                if (operator != '+' and operator != '-' and operator != '/'):
-                    print ("Wrong Operator...Try Again")
-                    continue
-               
-                addTime(time,operator,timesList)
+            calculate(timesList)                        
             #End WhileTrue_2
-
-          #End else hasNoFile      
-
-        calculate(timesList)
+        #End hasFile() == False   
+        
+        
         print("Do You Want To Try Again ? <Y/N>")
         outOrIn = input()
         if ( outOrIn == 'y' or outOrIn == 'Y'):
+            #reset all variables :
             timesList.clear()
+            IsItBatch = ""
+            contentArray = ""
             continue
         break 
 
@@ -221,3 +269,5 @@ def main():
 #==================================Start======================================
 
 main()
+
+
