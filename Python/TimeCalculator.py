@@ -95,9 +95,11 @@ def timeAverage( time1 , days ) :
     firstHours = firstTime[0]
     firstMinutes = firstTime[1]
 
-    totalMinutes = firstHours*60 + firstMinutes
-    averageHours = int((totalMinutes/days)/60)
-    averageMinutes = totalMinutes%days
+    #totalMinutes = firstHours*60 + firstMinutes
+    averageHours = int((firstHours/days))
+    remainingHours = int((firstHours%days))
+    remainigMinutes = remainingHours * 60 + firstMinutes 
+    averageMinutes = remainigMinutes/days 
     return (int(averageHours) , int(averageMinutes))
 
 #=============================================================================
@@ -159,7 +161,8 @@ def sortFileContent(content ,timesList ):
     
     contentArray = content.split('\n')
     contentArray = [x for x in contentArray if x != '\n']
-    p5rint("".join(contentArray))###
+    contentArray = [x for x in contentArray if x != ' ' and x != '']
+    print("".join(contentArray))###
     for timeStr in contentArray :
         time,operator = timeStr.split(' ')
         addTime(time,operator,timesList)
@@ -181,7 +184,7 @@ def main():
             filePath = input()
             content = readFromFile(filePath)
             if (content == "Restart"):
-                break
+                continue
             sortFileContent(content ,timesList)
             print()
         #end if hasFile
