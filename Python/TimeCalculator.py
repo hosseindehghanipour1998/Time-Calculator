@@ -77,7 +77,7 @@ def timeSubtractor( time1 , time2 ):
     return (int(finalHours),int(finalMinutes))
 
 #=============================================================================
-def timeDivider( time1 , time2 ):
+def timeQuota( time1 , time2 ):
     firstTime = timeExtractor(time1)
     firstHours = firstTime[0]
     firstMinutes = firstTime[1]
@@ -88,7 +88,17 @@ def timeDivider( time1 , time2 ):
 
     firstTotalMinutes = firstHours*60 + firstMinutes
     secondTotalMinutes = secondHours*60 + secondMinutes
-    return ("%.2f" %((firstTotalMinutes)/(secondTotalMinutes)))
+    return (int(firstTotalMinutes),int(secondTotalMinutes))
+#=============================================================================
+def timeAverage( time1 , days ) :
+    firstTime = timeExtractor(time1)
+    firstHours = firstTime[0]
+    firstMinutes = firstTime[1]
+
+    totalMinutes = firstHours*60 + firstMinutes
+    averageHours = int((totalMinutes/days)/60)
+    averageMinutes = totalMinutes%days
+    return (int(averageHours) , int(averageMinutes))
 
 #=============================================================================
 def printEachInputData( time , operation):
@@ -97,6 +107,8 @@ def printEachInputData( time , operation):
         status = "SUMMATE"
     elif ( operation == "-"):
         status = "SUBTRACT"
+    elif (operation == "/" ):
+        status = "AVERAGE" 
     print("Time :\t %s \t Status: %s" %(time,status))
 #=============================================================================
 class Entery :
@@ -117,7 +129,9 @@ def calculate(listOfTimes):
         if (timeItem.operator == '-' ):
             inputString = str(hourResult) +":"+str(minuteResult)
             hourResult,minuteResult = timeSubtractor(str(inputString),timeItem.time)
-    
+        if ( timeItem.operator == '/' ):
+            inputString = str(hourResult) +":"+str(minuteResult)
+            hourResult,minuteResult = timeAverage(str(inputString),int(timeItem.time))
     print("%d:%.2d" %(hourResult,minuteResult))
 #=============================================================================            
 #Main
@@ -132,7 +146,7 @@ def main():
         if ( time =='e' or operator == 'e' or time =='E' or operator == 'E'):
             print()
             break
-        if (operator != '+' and operator != '-' ):
+        if (operator != '+' and operator != '-' and operator != '/'):
             print ("Wrong Operator...Try Again")
             continue
        
@@ -143,7 +157,8 @@ def main():
     for timeItem in timesList:
         result = printEachInputData(timeItem.time,timeItem.operator)
     calculate(timesList)
-
+    print("<Enter Any Key to Close>")
+    input()
 
 
 
