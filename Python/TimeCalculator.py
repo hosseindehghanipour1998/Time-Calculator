@@ -101,7 +101,7 @@ def timeAverage( time1 , days ) :
     return (int(averageHours) , int(averageMinutes))
 
 #=============================================================================
-def printEachInputData( time , operation):
+def printEachInputData( time , operation , inTimeResult):
     status = ""
     if ( operation == "+"):
         status = "SUMMATE"
@@ -109,7 +109,7 @@ def printEachInputData( time , operation):
         status = "SUBTRACT"
     elif (operation == "/" ):
         status = "AVERAGE" 
-    print("Time :\t %s \t Status: %s" %(time,status))
+    print("Time :\t %s \t Status: %s \t %s" %(time,status,inTimeResult))
 #=============================================================================
 class Entery :
     def __init__(self , time , operator):
@@ -132,33 +132,89 @@ def calculate(listOfTimes):
         if ( timeItem.operator == '/' ):
             inputString = str(hourResult) +":"+str(minuteResult)
             hourResult,minuteResult = timeAverage(str(inputString),int(timeItem.time))
+            
+        printEachInputData(timeItem.time,timeItem.operator,(str(hourResult) +":"+str(minuteResult)))
     print("%d:%.2d" %(hourResult,minuteResult))
-#=============================================================================            
+#=============================================================================
+def hasFile():
+    print("Do you have a file to read ? <Y/N>" )
+    choice = input()
+    if ( choice =='Y' or choice == 'y' ):
+        return True
+    return False
+#=============================================================================
+def readFromFile(fileAddress):
+    
+    try:
+        file = open(fileAddress)
+        content = file.read()
+        file.close()
+        return content
+    except:
+        print("No such File")
+        return "Restart"
+        
+#=============================================================================
+def sortFileContent(content ,timesList ):
+    
+    contentArray = content.split('\n')
+    contentArray = [x for x in contentArray if x != '\n']
+    p5rint("".join(contentArray))###
+    for timeStr in contentArray :
+        time,operator = timeStr.split(' ')
+        addTime(time,operator,timesList)
+     
+    
+#=============================================================================        
+def addTime(time,operator,timesList):  
+    tempTime = Entery(time,operator)
+    timesList.append(tempTime)
+#=============================================================================
 #Main
 def main():
-
-    timesList = []
-    print("[Time]<Space>[Operator] or E to end")
     
-    while (True):
-        time,operator = input().split(' ')
+    timesList = [] 
+    while (True) :#start WhileTrue_1
         
-        if ( time =='e' or operator == 'e' or time =='E' or operator == 'E'):
+        if ( hasFile() == True ):#start If hasFile
+            print("What's the filePath?")
+            filePath = input()
+            content = readFromFile(filePath)
+            if (content == "Restart"):
+                break
+            sortFileContent(content ,timesList)
             print()
-            break
-        if (operator != '+' and operator != '-' and operator != '/'):
-            print ("Wrong Operator...Try Again")
-            continue
-       
-        tempTime = Entery(time,operator)
-        timesList.append(tempTime)
+        #end if hasFile
 
-        
-    for timeItem in timesList:
-        result = printEachInputData(timeItem.time,timeItem.operator)
-    calculate(timesList)
-    print("<Enter Any Key to Close>")
-    input()
+            
+        else :#start else hasNoFile
+            
+            print("[Time]<Space>[Operator] or E to end")
+            
+            while (True):#start WhileTrue_2
+                time,operator = input().split(' ')
+                
+                if ( time =='e' or operator == 'e' or time =='E' or operator == 'E'):
+                    print()
+                    break
+                if (operator != '+' and operator != '-' and operator != '/'):
+                    print ("Wrong Operator...Try Again")
+                    continue
+               
+                addTime(time,operator,timesList)
+            #End WhileTrue_2
+
+          #End else hasNoFile      
+
+        calculate(timesList)
+        print("Do You Want To Try Again ? <Y/N>")
+        outOrIn = input()
+        if ( outOrIn == 'y' or outOrIn == 'Y'):
+            timesList.clear()
+            continue
+        break 
+
+    #End WhileTrue_1
 
 
 
